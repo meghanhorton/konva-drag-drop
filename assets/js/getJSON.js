@@ -1,3 +1,53 @@
+// INITIALIZE KONVA
+
+var stage = new Konva.Stage({
+  container: 'wall',
+  width: document.getElementById('wall').offsetWidth,
+  height: document.getElementById('wall').offsetHeight
+});
+
+var layer = new Konva.Layer();
+stage.add(layer);
+
+// READ JSON
+var scale = 15,
+    spacing = 1 * scale, // 1 inch
+    addImages = [],
+    x = 0,
+    y = 0;
+
+loadJSON("frames.json",function(response) {
+  // Parse JSON string into object
+    var obj = JSON.parse(response);
+    for (var id in obj.frames) {
+        var product = obj.frames[id];
+
+        for (var itemID in product.options ){
+            var imgObj = new Image();
+            var img = new Konva.Image({
+                x: x,
+                y: y,
+                image: imgObj,
+                width: product.dimensions.frame.width * scale,
+                height: product.dimensions.frame.height * scale,
+                draggable: true
+            });
+
+            layer.add(img);
+            
+            imgObj.onload = function() {
+                img.image(imgObj);
+                layer.draw();
+            };
+            imgObj.src = "assets/img/frames/"+ product.options[itemID].item_id +".png";
+
+            // Adds spacing
+            x = x + (product.dimensions.frame.width * scale) + spacing;
+        }
+    }
+ });
+
+// FUNCTIONS
 function loadJSON(url, callback) {   
     var xobj = new XMLHttpRequest();
         xobj.overrideMimeType("application/json");
@@ -11,38 +61,7 @@ function loadJSON(url, callback) {
     xobj.send(null);  
 }
 
-var scale = 15;
+// ADD IMAGE
+function addImage(){
 
-loadJSON("frames.json",function(response) {
-  // Parse JSON string into object
-    var obj = JSON.parse(response);
-    for (var id in obj.frames) {
-        var product = obj.frames[id];
-
-        for (var itemID in product.options ){
-            // HORIZONTAL
-            var elem = document.createElement("img");
-            elem.setAttribute("src", "assets/img/frames/"+ product.options[itemID].item_id +".png");
-            elem.setAttribute("height", product.dimensions.frame.height * scale );
-            elem.setAttribute("width", product.dimensions.frame.width * scale );
-            elem.setAttribute("alt", product.name );
-            elem.setAttribute("class", "product");
-            elem.setAttribute("id", product.options[itemID].item_id );
-            elem.setAttribute("draggable", true);
-            
-            document.getElementById("options").appendChild(elem);
-
-            // VERTICAL
-            var elem = document.createElement("img");
-            elem.setAttribute("src", "assets/img/frames/"+ product.options[itemID].item_id +".png");
-            elem.setAttribute("height", product.dimensions.frame.width * scale );
-            elem.setAttribute("width", product.dimensions.frame.height * scale );
-            elem.setAttribute("alt", product.name );
-            elem.setAttribute("class", "product");
-            elem.setAttribute("id", product.options[itemID].item_id );
-            elem.setAttribute("draggable", true);
-            
-            document.getElementById("options").appendChild(elem);
-        }
-    }
- });
+}
