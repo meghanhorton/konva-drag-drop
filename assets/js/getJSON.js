@@ -23,26 +23,7 @@ loadJSON("frames.json",function(response) {
         var product = obj.frames[id];
 
         for (var itemID in product.options ){
-            var imgObj = new Image();
-            var img = new Konva.Image({
-                x: x,
-                y: y,
-                image: imgObj,
-                width: product.dimensions.frame.width * scale,
-                height: product.dimensions.frame.height * scale,
-                draggable: true
-            });
-
-            layer.add(img);
-            
-            imgObj.onload = function() {
-                img.image(imgObj);
-                layer.draw();
-            };
-            imgObj.src = "assets/img/frames/"+ product.options[itemID].item_id +".png";
-
-            // Adds spacing
-            x = x + (product.dimensions.frame.width * scale) + spacing;
+            addToCanvas( layer , product , product.options[itemID] );
         }
     }
  });
@@ -61,7 +42,32 @@ function loadJSON(url, callback) {
     xobj.send(null);  
 }
 
-// ADD IMAGE
-function addImage(){
+// ADD TO OPTIONS
+function addToList(target,product,options){
 
+
+}
+
+// ADD TO CANVAS
+function addToCanvas(target,product,options){
+    var imgObj = new Image();
+    var img = new Konva.Image({
+        x: x,
+        y: y,
+        image: imgObj,
+        width: product.dimensions.frame.width * scale,
+        height: product.dimensions.frame.height * scale,
+        draggable: true
+    });
+
+    target.add(img);
+    
+    imgObj.onload = function() {
+        img.image(imgObj);
+        target.draw();
+    };
+    imgObj.src = "assets/img/frames/"+ options.item_id +".png";
+
+    // Adds spacing
+    x = x + (product.dimensions.frame.width * scale) + spacing;
 }
