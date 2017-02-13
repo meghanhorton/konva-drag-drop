@@ -1,7 +1,8 @@
 var img = [],
     scale = 5,
     canvasScale = 15,
-    spacing = 1 * scale;
+    spacing = 1 * scale,
+    motion = false;
 
 // FUNCTIONS
 function loadJSON(url, callback) {   
@@ -63,26 +64,28 @@ function addToCanvas(width,height,src,id){
 
     imgObj.src = src;
 
-
-
-    layer.find('#'+id)[0].addEventListener("dblclick",function(){
-        layer.destroy();
-    })
+    showImageMenu(layer,img[id]);
 }
 
 // IMAGE MENU
-// function showImageMenu(id){
-//     var obj = stage.find('#'+id)[0];
+function showImageMenu(target,obj){
+    // Rotate about center on click
+    obj.addEventListener("mousemove",function(){
+        motion = true;
+        console.log(motion);
+    });
 
-//     obj.addEventListener("mouseenter",function(){
-//         obj.
-//         console.log('mouse entered!', obj);
-//     });
+    obj.addEventListener("mouseup",function(){
+        // let's go rotate image relative to it's center!
+        // we need to set offset to define new "center" of image
+        obj.offsetX(obj.width() / 2);
+        obj.offsetY(obj.height() / 2);
 
-//     obj.addEventListener("mouseleave",function(){
-//         console.log('mouse left!', obj);
-//     });
+        obj.rotate(90);
+    })
 
-//     obj.addEventListener("dblclick",function(){
-//     })
-// }
+    // Delete on double click
+    obj.addEventListener("dblclick",function(){
+        target.destroy();
+    })
+}
